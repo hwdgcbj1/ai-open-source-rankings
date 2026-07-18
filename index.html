@@ -10,7 +10,7 @@
  :root {
  --bg: #0d1117;
  --bg-card: #161b22;
- --bg-card-hover: #1c2333;
+ --bg-card-hover: #161b22;
  --bg-toolbar: #161b22;
  --border: #21262d;
  --border-hover: #30363d;
@@ -19,6 +19,7 @@
  --text-tertiary: #8b949e;
  --text-muted: #484f58;
  --accent-green: #3fb950;
+ --accent-green-dim: #2d6e38;
  --accent-orange: #f0883e;
  --accent-purple: #bc8cff;
  --accent-blue: #58a6ff;
@@ -40,12 +41,13 @@
  --scrollbar-thumb-hover: #484f58;
  --tooltip-bg: #1c2333;
  --tooltip-border: #30363d;
+ --accent-line: #238636;
  }
 
  [data-theme="light"] {
  --bg: #f6f8fa;
  --bg-card: #ffffff;
- --bg-card-hover: #f3f4f6;
+ --bg-card-hover: #ffffff;
  --bg-toolbar: #ffffff;
  --border: #d0d7de;
  --border-hover: #afb8c1;
@@ -54,6 +56,7 @@
  --text-tertiary: #8c959f;
  --text-muted: #afb8c1;
  --accent-green: #1a7f37;
+ --accent-green-dim: #9bc3a0;
  --accent-orange: #bd561d;
  --accent-purple: #8250df;
  --accent-blue: #0969da;
@@ -75,19 +78,16 @@
  --scrollbar-thumb-hover: #afb8c1;
  --tooltip-bg: #ffffff;
  --tooltip-border: #d0d7de;
+ --accent-line: #2da44e;
  }
 
- /* ===== 全局重置 ===== */
  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
  html { scroll-behavior: smooth; }
  body {
  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
- background: var(--bg);
- color: var(--text-primary);
- min-height: 100vh;
- padding: 0;
- display: flex;
- justify-content: center;
+ background: var(--bg); color: var(--text-primary);
+ min-height: 100vh; padding: 0;
+ display: flex; justify-content: center;
  transition: background .3s, color .3s;
  }
  .container { max-width: 1100px; width: 100%; padding: 24px 16px 60px; }
@@ -129,20 +129,26 @@
  [data-theme="light"] .theme-toggle .knob .fa-moon { display: none; }
  [data-theme="dark"] .theme-toggle .knob .fa-sun { display: none; }
 
- .update-info {
- display: flex; align-items: center; gap: 6px;
- background: var(--bg-card); padding: 5px 14px; border-radius: 20px;
- border: 1px solid var(--border); font-size: 12px; color: var(--text-tertiary);
+ /* ===== 数据新鲜度栏（含更新时间） ===== */
+ .data-bar {
+ display: flex; align-items: center; gap: 16px;
+ margin-bottom: 16px; padding: 10px 16px;
+ background: var(--bg-card); border: 1px solid var(--border);
+ border-radius: 10px; font-size: 12px; color: var(--text-tertiary); flex-wrap: wrap;
  }
- .update-info .dot {
- display: inline-block; width: 8px; height: 8px;
- border-radius: 50%; background: var(--accent-green);
+ .data-bar .fresh { display: flex; align-items: center; gap: 6px; }
+ .data-bar .fresh .green-dot {
+ width: 8px; height: 8px; border-radius: 50%; background: var(--accent-green);
  animation: pulse-dot 2s ease-in-out infinite;
  }
- @keyframes pulse-dot {
- 0%, 100% { opacity: 1; } 50% { opacity: .4; }
+ @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+ .data-bar .fresh .label { color: var(--text-secondary); font-weight: 600; }
+ .data-bar .update-time {
+ margin-left: auto; display: flex; align-items: center; gap: 4px;
+ font-size: 12px; color: var(--text-tertiary); white-space: nowrap;
  }
- .update-info i { color: var(--accent-orange); }
+ .data-bar .update-time i { font-size: 11px; }
+ .data-bar .update-time strong { color: var(--text-secondary); font-weight: 500; }
 
  /* ===== 工具栏 ===== */
  .toolbar {
@@ -158,9 +164,9 @@
  font-family: inherit; outline: none; transition: border-color .2s;
  }
  .toolbar .search-wrap input:focus { border-color: var(--accent-blue); }
- .toolbar .search-wrap i {
+ .toolbar .search-wrap i.search-icon {
  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
- color: var(--text-tertiary); font-size: 14px;
+ color: var(--text-tertiary); font-size: 14px; pointer-events: none;
  }
  .toolbar .search-wrap .clear-btn {
  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
@@ -168,14 +174,16 @@
  font-size: 14px; display: none; padding: 4px;
  }
  .toolbar .search-wrap .clear-btn.show { display: block; }
+ .toolbar .search-wrap .clear-btn:hover { color: var(--text-primary); }
 
  .toolbar select {
  padding: 9px 14px; background: var(--search-bg); border: 1px solid var(--border);
- border-radius: 10px; color: var(--text-primary); font-size: 13px;
- font-family: inherit; outline: none; cursor: pointer; min-width: 90px;
- transition: border-color .2s; appearance: auto;
+ border-radius: 10px; color: var(--text-secondary); font-size: 13px;
+ font-family: inherit; outline: none; cursor: pointer; min-width: 80px;
+ transition: all .2s; appearance: auto;
  }
  .toolbar select:focus { border-color: var(--accent-blue); }
+ .toolbar select.changed { color: var(--text-primary); border-color: var(--accent-blue); }
 
  .toolbar .minimal-toggle {
  display: flex; align-items: center; gap: 6px;
@@ -188,27 +196,7 @@
  background: var(--tab-active); color: #fff; border-color: var(--tab-active);
  }
 
- /* 空结果 */
- .empty-state {
- text-align: center; padding: 60px 20px; color: var(--text-tertiary);
- }
- .empty-state i { font-size: 48px; margin-bottom: 16px; opacity: .4; }
- .empty-state p { font-size: 15px; }
-
- /* ===== 数据新鲜度栏 ===== */
- .data-bar {
- display: flex; align-items: center; gap: 16px;
- margin-bottom: 16px; padding: 10px 16px;
- background: var(--bg-card); border: 1px solid var(--border);
- border-radius: 10px; font-size: 12px; color: var(--text-tertiary); flex-wrap: wrap;
- }
- .data-bar .fresh { display: flex; align-items: center; gap: 6px; }
- .data-bar .fresh .green-dot {
- width: 8px; height: 8px; border-radius: 50%; background: var(--accent-green);
- }
- .data-bar .fresh .label { color: var(--text-secondary); font-weight: 600; }
-
- /* ===== 标签页 ===== */
+ /* ===== 标签页（无badge） ===== */
  .tabs {
  display: flex; gap: 4px; margin-bottom: 20px;
  background: var(--tab-bg); padding: 5px; border-radius: 12px;
@@ -221,16 +209,11 @@
  display: flex; align-items: center; justify-content: center; gap: 6px;
  font-family: inherit; position: relative;
  }
- .tab-btn:hover { color: var(--text-primary); background: var(--bg-card-hover); }
+ .tab-btn:hover { color: var(--text-primary); background: rgba(255,255,255,.04); }
  .tab-btn.active {
  background: var(--tab-active); color: #fff;
  box-shadow: 0 3px 10px var(--tab-active-shadow);
  }
- .tab-btn .badge {
- background: rgba(255,255,255,.15); padding: 0 8px; border-radius: 10px;
- font-size: 11px; font-weight: 500;
- }
- .tab-btn.active .badge { background: rgba(255,255,255,.2); }
 
  /* ===== 排行榜列表 ===== */
  .rank-list { display: none; animation: fadeUp .35s ease; }
@@ -244,7 +227,7 @@
  .rank-badge {
  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
  display: flex; align-items: center; justify-content: center;
- font-size: 20px; font-weight: 800; letter-spacing: -.5px;
+ font-size: 18px; font-weight: 800; letter-spacing: -.5px;
  font-feature-settings: "tnum"; position: relative;
  }
  .rank-badge.top1 { background: linear-gradient(135deg, #f5a623, #f0883e); color: #fff; }
@@ -252,11 +235,15 @@
  .rank-badge.top3 { background: linear-gradient(135deg, #d4a86a, #cd7f32); color: #fff; }
  .rank-badge.other {
  background: var(--tab-bg); color: var(--text-tertiary);
- font-size: 18px; border: 1px solid var(--border);
+ border: 1px solid var(--border); border-radius: 50%; font-size: 16px;
  }
 
- .rank-badge .crown {
- position: absolute; top: -8px; right: -6px; font-size: 12px;
+ /* 冠/亚/季军标记 */
+ .rank-badge .trophy { position: absolute; top: -7px; right: -6px; font-size: 13px; }
+
+ /* 进度条基准说明 */
+ .progress-note {
+ font-size: 11px; color: var(--text-tertiary); margin-bottom: 6px; padding-left: 2px;
  }
 
  /* ===== 项目卡片 ===== */
@@ -265,15 +252,21 @@
  border: 1px solid var(--border); border-radius: 14px;
  padding: 18px 20px; margin-bottom: 10px;
  transition: all .2s ease; cursor: default; position: relative;
+ box-shadow: 0 1px 4px rgba(0,0,0,.15);
  }
  .rank-item:hover {
- border-color: var(--border-hover); background: var(--bg-card-hover);
- transform: translateY(-1px); box-shadow: 0 6px 20px var(--shadow);
+ border-color: var(--border-hover);
+ box-shadow: 0 6px 24px var(--shadow);
+ /* 左侧强调竖线 */
+ background: linear-gradient(90deg, var(--accent-line) 0px, var(--accent-line) 3px, var(--bg-card) 3px);
+ }
+ [data-theme="light"] .rank-item:hover {
+ background: linear-gradient(90deg, var(--accent-line) 0px, var(--accent-line) 3px, var(--bg-card) 3px);
  }
 
  .rank-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
 
- /* 第 1 级：仓库名 */
+ /* 第 1 级：仓库名（无小星标） */
  .project-name {
  font-size: 17px; font-weight: 600; color: var(--text-primary);
  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -284,46 +277,39 @@
  .project-name a:hover { color: var(--accent-blue-hover); text-decoration: underline; }
  .project-name .repo-icon { color: var(--text-tertiary); font-size: 15px; }
  .project-name .ext-link {
- font-size: 12px; color: var(--text-tertiary); opacity: .6;
+ font-size: 12px; color: var(--text-tertiary); opacity: .4;
  transition: opacity .2s; text-decoration: none;
  }
- .project-name:hover .ext-link { opacity: 1; }
+ .project-name:hover .ext-link { opacity: .85; }
 
- /* 星星徽章 */
- .stars-badge {
- display: inline-flex; align-items: center; gap: 3px;
- background: var(--badge-bg); padding: 1px 10px 1px 6px;
- border-radius: 16px; font-size: 12px; font-weight: 500;
- color: var(--text-secondary); border: 1px solid var(--badge-border);
- }
- .stars-badge i { color: var(--accent-orange); font-size: 12px; }
-
- /* 第 2 级：总星标 (大号主题色) */
+ /* 第 2 级：总星标（大号主题色，无重复小标签） */
  .stars-main {
  font-size: 28px; font-weight: 700; color: var(--accent-orange);
  line-height: 1.1; letter-spacing: -.5px;
  }
  .stars-main .label { font-size: 13px; font-weight: 400; color: var(--text-tertiary); margin-left: 6px; }
 
- /* 第 3 级：增长数据 */
+ /* 第 3 级：增长数据 - 分三级视觉权重 */
  .growth-row {
- display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px;
+ display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px;
  }
  .growth-item {
  display: flex; align-items: center; gap: 4px;
  font-size: 13px; color: var(--text-tertiary);
  }
- .growth-item .val { font-weight: 600; }
- .growth-item .val.high { color: var(--accent-green); }
- .growth-item .val.medium { color: var(--accent-green); opacity: .75; }
- .growth-item .val.low { color: var(--text-tertiary); }
- .growth-item i { font-size: 11px; }
- .growth-item .trend-up { color: var(--accent-green); }
- .growth-item .trend-flat { color: var(--text-tertiary); }
+ /* 核心指标（今日/本月/年度）：亮绿加粗 */
+ .growth-item.primary .val { font-weight: 700; color: var(--accent-green); font-size: 14px; }
+ .growth-item.primary i { color: var(--accent-green); }
+ /* 次要（上周/上月/上月）：标准绿 */
+ .growth-item.secondary .val { font-weight: 500; color: var(--accent-green); opacity: .75; }
+ .growth-item.secondary i { color: var(--accent-green); opacity: .65; }
+ /* 弱化（上月/年度/上月以外的远端）：浅灰绿 */
+ .growth-item.tertiary .val { font-weight: 400; color: var(--text-tertiary); }
+ .growth-item.tertiary i { color: var(--text-tertiary); }
 
- /* 迷你进度条 */
+ /* 迷你进度条 - 仅给核心指标 */
  .mini-bar-wrap {
- flex: 1; min-width: 60px; max-width: 160px; display: flex; align-items: center; gap: 6px;
+ flex: 1; min-width: 80px; max-width: 160px; display: flex; align-items: center; gap: 6px;
  }
  .mini-bar {
  flex: 1; height: 5px; background: var(--progress-bg); border-radius: 3px; overflow: hidden;
@@ -331,11 +317,14 @@
  .mini-bar .fill {
  height: 100%; border-radius: 3px; transition: width .6s ease;
  }
- .mini-bar .fill.level-1 { background: var(--accent-green); opacity: .35; }
- .mini-bar .fill.level-2 { background: var(--accent-green); opacity: .55; }
- .mini-bar .fill.level-3 { background: var(--accent-green); opacity: .75; }
- .mini-bar .fill.level-4 { background: var(--accent-orange); }
- .mini-bar .fill.level-5 { background: #e05a30; }
+ .mini-bar .fill.lv-1 { background: var(--accent-green); opacity: .35; }
+ .mini-bar .fill.lv-2 { background: var(--accent-green); opacity: .55; }
+ .mini-bar .fill.lv-3 { background: var(--accent-green); opacity: .75; }
+ .mini-bar .fill.lv-4 { background: var(--accent-orange); }
+ .mini-bar .fill.lv-5 { background: #e05a30; }
+ .mini-bar .pct-label {
+ font-size: 11px; color: var(--text-tertiary); white-space: nowrap; min-width: 34px;
+ }
 
  /* 第 4 级：项目描述 */
  .project-desc {
@@ -347,9 +336,10 @@
  }
  .project-desc .more-btn {
  display: inline; color: var(--accent-blue); cursor: pointer;
- font-size: 12px; font-weight: 500; margin-left: 4px;
+ font-size: 12px; font-weight: 500; margin-left: 6px;
+ border-bottom: 1px dashed var(--accent-blue); text-decoration: none;
  }
- .project-desc .more-btn:hover { color: var(--accent-blue-hover); text-decoration: underline; }
+ .project-desc .more-btn:hover { color: var(--accent-blue-hover); }
 
  /* ===== 极简模式 ===== */
  .minimal-mode .stars-main { font-size: 20px; }
@@ -359,6 +349,7 @@
  .minimal-mode .mini-bar-wrap { display: none; }
  .minimal-mode .rank-item { padding: 12px 16px; }
  .minimal-mode .rank-content { gap: 3px; }
+ .minimal-mode .progress-note { display: none; }
 
  /* ===== 悬浮快捷操作 ===== */
  .quick-actions {
@@ -366,6 +357,8 @@
  display: flex; gap: 4px; opacity: 0; transition: opacity .2s;
  }
  .rank-item:hover .quick-actions { opacity: 1; }
+ @media (max-width: 768px) { .quick-actions { opacity: 1; } }
+
  .quick-actions button {
  width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border);
  background: var(--bg-card); color: var(--text-tertiary); cursor: pointer;
@@ -374,6 +367,18 @@
  }
  .quick-actions button:hover { background: var(--bg-card-hover); color: var(--text-primary); border-color: var(--border-hover); }
  .quick-actions button.faved { color: var(--accent-orange); }
+
+ /* Toast 提示 */
+ .toast {
+ position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+ background: var(--bg-card); border: 1px solid var(--border);
+ border-radius: 10px; padding: 10px 22px; font-size: 14px; color: var(--text-primary);
+ box-shadow: 0 6px 24px var(--shadow); z-index: 999;
+ opacity: 0; pointer-events: none; transition: all .3s;
+ display: flex; align-items: center; gap: 8px;
+ }
+ .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+ .toast i { color: var(--accent-green); }
 
  /* Tooltip */
  [data-tooltip] { position: relative; cursor: help; }
@@ -417,9 +422,9 @@
  transform: translateY(20px); transition: all .3s; pointer-events: none;
  }
  .back-top.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
- .back-top:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--tab-active-shadow); }
+ .back-top:hover { transform: translateY(-3px); box-shadow: 0 6px 24px var(--tab-active-shadow); }
 
- /* ===== 收藏侧边栏 ===== */
+ /* ===== 收藏 ===== */
  .fav-sidebar {
  position: fixed; top: 0; right: -320px; width: 300px; height: 100vh;
  background: var(--bg-card); border-left: 1px solid var(--border);
@@ -438,11 +443,11 @@
  .fav-sidebar .fav-item {
  display: flex; align-items: center; gap: 8px;
  padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border);
- margin-bottom: 6px; font-size: 13px; cursor: pointer; transition: background .15s;
+ margin-bottom: 6px; font-size: 13px; cursor: default; transition: background .15s;
  }
  .fav-sidebar .fav-item:hover { background: var(--bg-card-hover); }
  .fav-sidebar .fav-item a { color: var(--accent-blue); text-decoration: none; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
- .fav-sidebar .fav-item .remove-fav { color: var(--text-tertiary); cursor: pointer; font-size: 12px; }
+ .fav-sidebar .fav-item .remove-fav { color: var(--text-tertiary); cursor: pointer; font-size: 12px; padding: 2px 4px; }
  .fav-sidebar .fav-item .remove-fav:hover { color: #f85149; }
  .fav-sidebar .empty-fav {
  text-align: center; padding: 40px 0; color: var(--text-tertiary); font-size: 13px;
@@ -468,6 +473,13 @@
  font-weight: 700;
  }
 
+ /* ===== 空状态 ===== */
+ .empty-state {
+ text-align: center; padding: 60px 20px; color: var(--text-tertiary);
+ }
+ .empty-state i { font-size: 48px; margin-bottom: 16px; opacity: .4; }
+ .empty-state p { font-size: 15px; }
+
  /* ===== 页脚 ===== */
  .footer {
  margin-top: 40px; text-align: center; font-size: 12px; color: var(--text-muted);
@@ -487,23 +499,25 @@
  @media (max-width: 768px) {
  .header { flex-direction: column; align-items: flex-start; }
  .header-left h1 { font-size: 19px; }
- .toolbar select { min-width: 70px; font-size: 12px; padding: 8px 10px; }
+ .header-right { width: 100%; justify-content: flex-end; }
+ .toolbar select { min-width: 60px; font-size: 12px; padding: 8px 10px; }
  .toolbar .minimal-toggle { font-size: 12px; padding: 7px 10px; }
  .rank-item { padding: 14px 16px; gap: 12px; flex-direction: column; }
- .rank-badge { width: 34px; height: 34px; font-size: 17px; align-self: flex-start; }
- .rank-badge.other { font-size: 15px; }
+ .rank-badge { width: 34px; height: 34px; font-size: 16px; align-self: flex-start; }
+ .rank-badge.other { font-size: 14px; }
  .stars-main { font-size: 22px; }
  .project-name { font-size: 15px; }
  .tab-btn { min-width: 60px; padding: 8px 12px; font-size: 13px; }
- .tab-btn .badge { display: none; }
- .mini-bar-wrap { max-width: 100px; }
- .quick-actions { opacity: 1; }
+ .mini-bar-wrap { max-width: 120px; }
  .quick-actions button { width: 28px; height: 28px; font-size: 12px; }
  .back-top { bottom: 20px; right: 16px; width: 40px; height: 40px; font-size: 16px; }
  .fav-btn { bottom: 70px; right: 16px; width: 40px; height: 40px; font-size: 14px; }
  .fav-sidebar { width: 260px; }
  .data-bar { font-size: 11px; padding: 8px 12px; }
+ .data-bar .update-time { margin-left: 0; width: 100%; justify-content: flex-end; }
  .growth-item { font-size: 12px; }
+ .growth-item.primary .val { font-size: 13px; }
+ .rank-item:hover { background: var(--bg-card); }
  }
 
  @media (max-width: 480px) {
@@ -512,7 +526,7 @@
  .rank-item { padding: 12px; }
  .stars-main { font-size: 20px; }
  .project-name { font-size: 14px; }
- .mini-bar-wrap { max-width: 60px; }
+ .mini-bar-wrap { max-width: 80px; }
  }
  </style>
 </head>
@@ -529,18 +543,23 @@
  <div class="theme-toggle" id="themeToggle" role="button" tabindex="0" aria-label="切换明暗模式">
  <span class="knob"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></span>
  </div>
- <div class="update-info">
- <span class="dot"></span>
- <span>更新于 </span>
- <strong id="updateTime">2026-07-18 14:30</strong>
- </div>
  </div>
  </header>
+
+ <!-- ===== 数据新鲜度栏（含更新时间） ===== -->
+ <div class="data-bar">
+ <span class="fresh"><span class="green-dot"></span> <span class="label">今日已更新</span></span>
+ <span>基于 GitHub 公共数据 · 每日刷新 · AI 项目</span>
+ <span class="update-time">
+ <i class="fas fa-sync-alt fa-fw" style="font-size:11px"></i>
+ 更新于 <strong id="updateTime">2026-07-18 14:30</strong>
+ </span>
+ </div>
 
  <!-- ===== 工具栏 ===== -->
  <div class="toolbar" id="toolbar">
  <div class="search-wrap">
- <i class="fas fa-search"></i>
+ <i class="fas fa-search search-icon"></i>
  <input type="text" id="searchInput" placeholder="搜索仓库名 / 所有者…" autocomplete="off" />
  <button class="clear-btn" id="clearSearch"><i class="fas fa-times"></i></button>
  </div>
@@ -557,7 +576,7 @@
  <option value="工具">工具</option>
  </select>
  <select id="sortSelect">
- <option value="tab">📊 按榜单排序</option>
+ <option value="tab">📊 榜单排序</option>
  <option value="stars">⭐ 总星标</option>
  <option value="daily">📈 今日涨幅</option>
  <option value="monthly">📆 本月涨幅</option>
@@ -568,30 +587,16 @@
  </button>
  </div>
 
- <!-- ===== 数据新鲜度 ===== -->
- <div class="data-bar">
- <span class="fresh"><span class="green-dot"></span> <span class="label">今日已更新</span></span>
- <span>数据基于 GitHub 公开 API · 每日自动更新 · 仅展示 AI 相关项目</span>
- </div>
-
  <!-- ===== 标签页 ===== -->
  <div class="tabs" role="tablist">
- <button class="tab-btn active" data-tab="daily" role="tab">
- <i class="fas fa-sun"></i> 日榜 <span class="badge">今日</span>
- </button>
- <button class="tab-btn" data-tab="monthly" role="tab">
- <i class="fas fa-calendar-alt"></i> 月榜 <span class="badge">本月</span>
- </button>
- <button class="tab-btn" data-tab="yearly" role="tab">
- <i class="fas fa-calendar-check"></i> 年榜 <span class="badge">年度</span>
- </button>
+ <button class="tab-btn active" data-tab="daily" role="tab"><i class="fas fa-sun"></i> 日榜</button>
+ <button class="tab-btn" data-tab="monthly" role="tab"><i class="fas fa-calendar-alt"></i> 月榜</button>
+ <button class="tab-btn" data-tab="yearly" role="tab"><i class="fas fa-calendar-check"></i> 年榜</button>
  </div>
 
- <!-- ===== 日榜 ===== -->
+ <!-- ===== 排行榜 ===== -->
  <div id="daily" class="rank-list active" role="tabpanel"></div>
- <!-- ===== 月榜 ===== -->
  <div id="monthly" class="rank-list" role="tabpanel"></div>
- <!-- ===== 年榜 ===== -->
  <div id="yearly" class="rank-list" role="tabpanel"></div>
 
  <!-- ===== 分页 ===== -->
@@ -604,6 +609,9 @@
  <span>📊 每日自动更新</span>
  </div>
  </div>
+
+ <!-- ===== Toast ===== -->
+ <div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">已复制</span></div>
 
  <!-- ===== 回到顶部 ===== -->
  <button class="back-top" id="backTop" aria-label="回到顶部"><i class="fas fa-chevron-up"></i></button>
@@ -670,6 +678,17 @@
  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
  if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
  return num.toString();
+ }
+
+ let toastTimer;
+
+ function showToast(msg) {
+ const el = document.getElementById('toast');
+ const msgEl = document.getElementById('toastMsg');
+ clearTimeout(toastTimer);
+ msgEl.textContent = msg;
+ el.classList.add('show');
+ toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
  }
 
  // ================================================================
@@ -741,17 +760,13 @@
  function renderFavSidebar() {
  const el = document.getElementById('favList');
  if (state.favorites.length === 0) {
- el.innerHTML = '<div class="empty-fav"><i class="far fa-star" style="font-size:32px;display:block;margin-bottom:12px;opacity:.3"></i>还没有收藏的项目<br>点击卡片右上角 ⭐ 收藏</div>';
+ el.innerHTML = '<div class="empty-fav"><i class="far fa-star" style="font-size:32px;display:block;margin-bottom:12px;opacity:.3"></i>还没有收藏的项目<br>点击卡片右上方 ⭐ 图标收藏</div>';
  return;
  }
  el.innerHTML = state.favorites.map(id => {
  const p = PROJECTS.find(x => x.id === id);
  if (!p) return '';
- return `<div class="fav-item">
- <i class="fas fa-star" style="color:var(--accent-orange);font-size:12px"></i>
- <a href="${p.url}" target="_blank">${p.owner}/${p.name}</a>
- <span class="remove-fav" data-id="${p.id}"><i class="fas fa-times"></i></span>
- </div>`;
+ return `<div class="fav-item"><i class="fas fa-star" style="color:var(--accent-orange);font-size:12px"></i><a href="${p.url}" target="_blank">${p.owner}/${p.name}</a><span class="remove-fav" data-id="${p.id}"><i class="fas fa-times"></i></span></div>`;
  }).join('');
  el.querySelectorAll('.remove-fav').forEach(btn => {
  btn.addEventListener('click', e => { e.stopPropagation(); toggleFav(+btn.dataset.id); });
@@ -763,25 +778,16 @@
  // ================================================================
  function getFilteredData() {
  let data = rankCache[state.currentTab] || [];
- // 搜索
  if (state.searchQuery) {
  const q = state.searchQuery.toLowerCase();
  data = data.filter(p => p.owner.toLowerCase().includes(q) || p.name.toLowerCase().includes(q));
  }
- // 分类
- if (state.category) {
- data = data.filter(p => p.category === state.category);
- }
- // 排序
- if (state.sortBy === 'stars') {
- data = [...data].sort((a, b) => b.stars - a.stars);
- } else if (state.sortBy === 'daily') {
- data = [...data].sort((a, b) => b.dailyGrowth - a.dailyGrowth);
- } else if (state.sortBy === 'monthly') {
- data = [...data].sort((a, b) => b.monthlyGrowth - a.monthlyGrowth);
- } else if (state.sortBy === 'yearly') {
- data = [...data].sort((a, b) => b.yearlyGrowth - a.yearlyGrowth);
- }
+ if (state.category) data = data.filter(p => p.category === state.category);
+
+ if (state.sortBy === 'stars') data = [...data].sort((a, b) => b.stars - a.stars);
+ else if (state.sortBy === 'daily') data = [...data].sort((a, b) => b.dailyGrowth - a.dailyGrowth);
+ else if (state.sortBy === 'monthly') data = [...data].sort((a, b) => b.monthlyGrowth - a.monthlyGrowth);
+ else if (state.sortBy === 'yearly') data = [...data].sort((a, b) => b.yearlyGrowth - a.yearlyGrowth);
  return data;
  }
 
@@ -796,93 +802,86 @@
  function renderAll() {
  const allData = getFilteredData();
  const pageData = getPageData(allData);
- renderRankList(state.currentTab, pageData, allData.length);
+ renderRankList(state.currentTab, pageData, allData);
  renderPagination(allData.length);
  }
 
- function renderRankList(tabId, data, totalCount) {
+ function renderRankList(tabId, pageData, fullData) {
  const container = document.getElementById(tabId);
  if (!container) return;
 
- if (data.length === 0) {
+ if (pageData.length === 0) {
  const q = state.searchQuery || state.category;
- const hint = q ? `没有匹配"${q}"的项目` : '暂无数据';
- container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>${hint}</p></div>`;
+ container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>${q ? '没有匹配"'+q+'"的项目' : '暂无数据'}</p></div>`;
  return;
  }
 
- const rankEmojis = ['🥇', '🥈', '🥉'];
- const maxGrowth = Math.max(...data.map(d => d.dailyGrowth || d.monthlyGrowth || d.yearlyGrowth || 1), 1);
-
- // 当前 tab 的增长字段
+ const trophies = ['🥇', '🥈', '🥉'];
  const growthKeyMap = { daily: 'dailyGrowth', monthly: 'monthlyGrowth', yearly: 'yearlyGrowth' };
  const growthKey = growthKeyMap[tabId] || 'dailyGrowth';
  const tabLabel = { daily: '今日', monthly: '本月', yearly: '年度' };
 
+ // 以全部数据（含未翻页）的最大增长值为 100% 基准
+ const maxGrowth = Math.max(...fullData.map(d => d[growthKey] || 1), 1);
+
  let html = '';
- data.forEach((item, index) => {
+
+ // 进度条基准说明
+ html += `<div class="progress-note">📊 进度条以当前榜单第 1 名 ${tabLabel[tabId]} 增量为 100% 基准</div>`;
+
+ pageData.forEach((item, index) => {
  const rank = (state.page - 1) * state.perPage + index + 1;
  const rankClass = rank <= 3 ? `top${rank}` : 'other';
- const crownHtml = rank <= 3 ? `<span class="crown">${rankEmojis[rank-1]}</span>` : '';
- const badgeText = rank <= 3 ? '' : `#${rank}`;
+ const badgeText = rank <= 3 ? `#${rank}` : `#${rank}`;
+ const trophyHtml = rank <= 3 ? `<span class="trophy">${trophies[rank-1]}</span>` : '';
 
- // 第 3 级：增长数据
  const gVal = item[growthKey] || 0;
  const wVal = item.weeklyGrowth || 0;
  const mVal = item.monthlyGrowth || 0;
  const yVal = item.yearlyGrowth || 0;
- const barPct = Math.min(Math.round((gVal / maxGrowth) * 100), 100);
+ // 进度条：以榜单第 1 的增量为 100%
+ const topGrowth = maxGrowth;
+ const barPct = Math.min(Math.round((gVal / topGrowth) * 100), 100);
  const barLevel = barPct > 80 ? 5 : barPct > 60 ? 4 : barPct > 40 ? 3 : barPct > 20 ? 2 : 1;
 
- // 热度色阶
- const heatClass = barPct > 60 ? 'high' : barPct > 25 ? 'medium' : 'low';
-
+ // 构建增长行：按权重分级
  let growthHtml = '';
  if (tabId === 'daily') {
  growthHtml = `
- <span class="growth-item"><i class="fas fa-arrow-up trend-up"></i><span class="val ${heatClass}">+${formatNum(gVal)}</span><span>今日</span></span>
- <span class="growth-item"><i class="fas fa-arrow-up trend-up"></i><span class="val low">+${formatNum(wVal)}</span><span>上周</span></span>
- <span class="growth-item"><i class="fas fa-arrow-up trend-up"></i><span class="val low">+${formatNum(mVal)}</span><span>上月</span></span>`;
+ <span class="growth-item primary"><i class="fas fa-arrow-up"></i> <span class="val">+${formatNum(gVal)}</span> 今日</span>
+ <span class="growth-item secondary"><i class="fas fa-arrow-up"></i> <span class="val">+${formatNum(wVal)}</span> 上周</span>
+ <span class="growth-item tertiary"><i class="fas fa-arrow-up"></i> <span class="val">+${formatNum(mVal)}</span> 上月</span>
+ <span class="mini-bar-wrap"><span style="font-size:11px;color:var(--text-tertiary);white-space:nowrap">占榜首</span><div class="mini-bar"><div class="fill lv-${barLevel}" style="width:${barPct}%"></div></div><span class="pct-label">${barPct}%</span></span>`;
  } else if (tabId === 'monthly') {
  growthHtml = `
- <span class="growth-item"><i class="fas fa-arrow-up trend-up"></i><span class="val ${heatClass}">+${formatNum(gVal)}</span><span>本月</span></span>
- <span class="growth-item"><i class="fas fa-arrow-up trend-up"></i><span class="val low">+${formatNum(wVal)}</span><span>上周</span></span>
- <span class="growth-item"><i class="fas fa-calendar-alt" style="color:var(--accent-purple)"></i><span class="val low">+${formatNum(yVal)}</span><span>年度</span></span>`;
+ <span class="growth-item primary"><i class="fas fa-arrow-up"></i> <span class="val">+${formatNum(gVal)}</span> 本月</span>
+ <span class="growth-item secondary"><i class="fas fa-arrow-up"></i> <span class="val">+${formatNum(wVal)}</span> 上周</span>
+ <span class="growth-item tertiary"><i class="fas fa-calendar-alt"></i> <span class="val">+${formatNum(yVal)}</span> 年度</span>
+ <span class="mini-bar-wrap"><span style="font-size:11px;color:var(--text-tertiary);white-space:nowrap">占榜首</span><div class="mini-bar"><div class="fill lv-${barLevel}" style="width:${barPct}%"></div></div><span class="pct-label">${barPct}%</span></span>`;
  } else {
  growthHtml = `
- <span class="growth-item"><i class="fas fa-arrow-up trend-up"></i><span class="val ${heatClass}">+${formatNum(gVal)}</span><span>年度</span></span>
- <span class="growth-item"><i class="fas fa-arrow-up trend-up"></i><span class="val low">+${formatNum(mVal)}</span><span>上月</span></span>
- <span class="growth-item"><i class="fas fa-calendar-check" style="color:var(--accent-purple)"></i><span class="val low">+${formatNum(yVal)}</span><span>年度</span></span>`;
+ <span class="growth-item primary"><i class="fas fa-arrow-up"></i> <span class="val">+${formatNum(gVal)}</span> 年度</span>
+ <span class="growth-item secondary"><i class="fas fa-arrow-up"></i> <span class="val">+${formatNum(mVal)}</span> 上月</span>
+ <span class="growth-item tertiary"><i class="fas fa-calendar-check"></i> <span class="val">+${formatNum(yVal)}</span> 年度</span>
+ <span class="mini-bar-wrap"><span style="font-size:11px;color:var(--text-tertiary);white-space:nowrap">占榜首</span><div class="mini-bar"><div class="fill lv-${barLevel}" style="width:${barPct}%"></div></div><span class="pct-label">${barPct}%</span></span>`;
  }
 
  html += `
  <div class="rank-item" data-id="${item.id}">
- <div class="rank-badge ${rankClass}" data-tooltip="${rank <= 3 ? ['冠军','亚军','季军'][rank-1] : `第 ${rank} 名`}">${crownHtml}${badgeText}</div>
+ <div class="rank-badge ${rankClass}" data-tooltip="${rank <= 3 ? ['冠军','亚军','季军'][rank-1] : `第 ${rank} 名`}">${trophyHtml}${badgeText}</div>
  <div class="rank-content">
  <div class="project-name">
  <i class="fab fa-github repo-icon"></i>
  <a href="${item.url}" target="_blank" rel="noopener noreferrer">${item.owner}/${item.name}</a>
  <a href="${item.url}" target="_blank" class="ext-link" data-tooltip="新标签页打开"><i class="fas fa-external-link-alt"></i></a>
- <span class="stars-badge"><i class="fas fa-star"></i> ${formatNum(item.stars)}</span>
  </div>
  <div class="stars-main">${formatNum(item.stars)} <span class="label">总星标</span></div>
  <div class="growth-row">${growthHtml}</div>
- <div class="mini-bar-wrap">
- <span style="font-size:11px;color:var(--text-tertiary);min-width:30px;">${state.currentTab === 'daily' ? '今日' : state.currentTab === 'monthly' ? '本月' : '年度'}</span>
- <div class="mini-bar"><div class="fill level-${barLevel}" style="width:${barPct}%"></div></div>
- </div>
- <div class="project-desc clamped">
- ${item.description}
- <span class="more-btn" data-id="${item.id}">展开</span>
- </div>
+ <div class="project-desc clamped">${item.description}<span class="more-btn" data-id="${item.id}">展开</span></div>
  </div>
  <div class="quick-actions">
- <button class="fav-action ${isFaved(item.id) ? 'faved' : ''}" data-id="${item.id}" data-tooltip="${isFaved(item.id) ? '取消收藏' : '收藏'}">
- <i class="${isFaved(item.id) ? 'fas' : 'far'} fa-star"></i>
- </button>
- <button class="copy-action" data-repo="${item.owner}/${item.name}" data-tooltip="复制仓库名">
- <i class="fas fa-copy"></i>
- </button>
+ <button class="fav-action ${isFaved(item.id) ? 'faved' : ''}" data-id="${item.id}" data-tooltip="${isFaved(item.id) ? '取消收藏' : '收藏'}"><i class="${isFaved(item.id) ? 'fas' : 'far'} fa-star"></i></button>
+ <button class="copy-action" data-repo="${item.owner}/${item.name}" data-tooltip="复制仓库名"><i class="fas fa-copy"></i></button>
  <a href="${item.url}" target="_blank" style="text-decoration:none"><button data-tooltip="跳转 GitHub"><i class="fab fa-github"></i></button></a>
  </div>
  </div>`;
@@ -890,7 +889,7 @@
 
  container.innerHTML = html;
 
- // 展开/收起
+ // 展开
  container.querySelectorAll('.more-btn').forEach(btn => {
  btn.addEventListener('click', function() {
  const desc = this.parentElement;
@@ -899,22 +898,20 @@
  });
  });
 
- // 收藏按钮
+ // 收藏
  container.querySelectorAll('.fav-action').forEach(btn => {
  btn.addEventListener('click', function() {
  toggleFav(+this.dataset.id);
  });
  });
 
- // 复制
+ // 复制 → Toast
  container.querySelectorAll('.copy-action').forEach(btn => {
  btn.addEventListener('click', async function() {
  try {
  await navigator.clipboard.writeText(this.dataset.repo);
- const orig = this.innerHTML;
- this.innerHTML = '<i class="fas fa-check" style="color:var(--accent-green)"></i>';
- setTimeout(() => this.innerHTML = orig, 1200);
- } catch {}
+ showToast('✅ 已复制 ' + this.dataset.repo);
+ } catch { showToast('复制失败，请手动复制'); }
  });
  });
  }
@@ -927,12 +924,11 @@
  const totalPages = Math.max(1, Math.ceil(total / state.perPage));
  if (totalPages <= 1) { el.innerHTML = ''; return; }
 
- let h = '';
- h += `<button ${state.page <= 1 ? 'disabled' : ''} id="pagePrev"><i class="fas fa-chevron-left"></i></button>`;
+ let h = `<button ${state.page <= 1 ? 'disabled' : ''} id="pagePrev"><i class="fas fa-chevron-left"></i></button>`;
  for (let i = 1; i <= totalPages; i++) {
  if (i === 1 || i === totalPages || Math.abs(i - state.page) <= 1) {
  h += `<button class="${i === state.page ? 'active' : ''}" data-page="${i}">${i}</button>`;
- } else if (i === 2 && state.page > 3 || i === totalPages - 1 && state.page < totalPages - 2) {
+ } else if (i === state.page - 2 || i === state.page + 2) {
  h += `<span class="page-info">…</span>`;
  }
  }
@@ -942,10 +938,11 @@
  el.querySelectorAll('[data-page]').forEach(btn => {
  btn.addEventListener('click', () => { state.page = +btn.dataset.page; renderAll(); scrollTo({top:0,behavior:'smooth'}); });
  });
+ const goPage = (p) => { if(p>=1&&p<=totalPages){state.page=p;renderAll();scrollTo({top:0,behavior:'smooth'});} };
  const prev = document.getElementById('pagePrev');
  const next = document.getElementById('pageNext');
- if (prev) prev.addEventListener('click', () => { if(state.page>1){state.page--;renderAll();scrollTo({top:0,behavior:'smooth'});} });
- if (next) next.addEventListener('click', () => { if(state.page<totalPages){state.page++;renderAll();scrollTo({top:0,behavior:'smooth'});} });
+ if (prev) prev.addEventListener('click', () => goPage(state.page - 1));
+ if (next) next.addEventListener('click', () => goPage(state.page + 1));
  }
 
  // ================================================================
@@ -957,10 +954,9 @@
  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
  this.classList.add('active');
  document.querySelectorAll('.rank-list').forEach(p => p.classList.remove('active'));
- const tabId = this.dataset.tab;
- state.currentTab = tabId;
+ state.currentTab = this.dataset.tab;
  state.page = 1;
- document.getElementById(tabId).classList.add('active');
+ document.getElementById(state.currentTab).classList.add('active');
  renderAll();
  });
  });
@@ -983,15 +979,16 @@
  }
 
  // ================================================================
- // 11. 工具栏事件
+ // 11. 工具栏
  // ================================================================
  function initToolbar() {
  const searchInput = document.getElementById('searchInput');
  const clearBtn = document.getElementById('clearSearch');
- const categoryFilter = document.getElementById('categoryFilter');
+ const catSelect = document.getElementById('categoryFilter');
  const sortSelect = document.getElementById('sortSelect');
  const minimalToggle = document.getElementById('minimalToggle');
 
+ // 搜索
  let searchTimer;
  searchInput.addEventListener('input', function() {
  clearBtn.classList.toggle('show', this.value.length > 0);
@@ -1002,7 +999,6 @@
  renderAll();
  }, 250);
  });
-
  clearBtn.addEventListener('click', function() {
  searchInput.value = '';
  this.classList.remove('show');
@@ -1012,18 +1008,24 @@
  searchInput.focus();
  });
 
- categoryFilter.addEventListener('change', function() {
+ // 分类 → 回显选中状态
+ catSelect.addEventListener('change', function() {
  state.category = this.value;
  state.page = 1;
+ this.classList.toggle('changed', this.value !== '');
+ // 把选中的文字回显到按钮——select本身就显示选中项，所以只需颜色变化
  renderAll();
  });
 
+ // 排序 → 回显选中状态
  sortSelect.addEventListener('change', function() {
  state.sortBy = this.value;
  state.page = 1;
+ this.classList.toggle('changed', this.value !== 'tab');
  renderAll();
  });
 
+ // 极简模式
  minimalToggle.addEventListener('click', function() {
  state.minimal = !state.minimal;
  this.classList.toggle('active');
@@ -1039,7 +1041,10 @@
  const btn = document.getElementById('backTop');
  let ticking = false;
  window.addEventListener('scroll', () => {
- if (!ticking) { requestAnimationFrame(() => { btn.classList.toggle('show', window.scrollY > 300); ticking = false; }); ticking = true; }
+ if (!ticking) {
+ requestAnimationFrame(() => { btn.classList.toggle('show', window.scrollY > 300); ticking = false; });
+ ticking = true;
+ }
  });
  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
  }
@@ -1068,12 +1073,11 @@
  renderFavSidebar();
  updateFavUI();
 
- // 更新时间
  const now = new Date();
  document.getElementById('updateTime').textContent =
  `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
- console.log('✅ AI 开源项目排行榜 v2 已加载');
+ console.log('✅ AI 开源项目排行榜 v3 已加载');
  </script>
 </body>
 </html>
