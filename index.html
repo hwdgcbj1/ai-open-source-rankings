@@ -616,7 +616,17 @@ function getFilteredData(){
    }
   });
  }
- if(q)data=data.filter(p=>p.owner.toLowerCase().includes(q)||p.name.toLowerCase().includes(q)||(p.description||'').toLowerCase().includes(q)||(p.category||'').toLowerCase().includes(q)||(p.tags?p.tags.scenario.some(s=>s.toLowerCase().includes(q))||p.tags.tech.some(s=>s.toLowerCase().includes(q))||p.tags.feature.some(s=>s.toLowerCase().includes(q)):false));
+ // For GitHub search results, skip local text filter (already filtered by API)
+ // For local items, apply text filter across name/description/category/tags
+ if(q){
+  const searchItems=data.filter(p=>p.isFromSearch);
+  const localItems=data.filter(p=>!p.isFromSearch)
+   .filter(p=>p.owner.toLowerCase().includes(q)||p.name.toLowerCase().includes(q)
+    ||(p.description||'').toLowerCase().includes(q)
+    ||(p.category||'').toLowerCase().includes(q)
+    ||(p.tags?p.tags.scenario.some(s=>s.toLowerCase().includes(q))||p.tags.tech.some(s=>s.toLowerCase().includes(q))||p.tags.feature.some(s=>s.toLowerCase().includes(q)):false));
+  data=[...localItems,...searchItems];
+ }
  if(state.category)data=data.filter(p=>p.category===state.category);
  // Advanced
  if(state.langFilter.length>0)data=data.filter(p=>state.langFilter.includes(p.language));
