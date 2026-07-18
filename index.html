@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>GitHub 最佳 AI 开源项目排行榜</title>
+ <!-- Font Awesome 图标库 -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+ <style>
+ /* ===== 全局重置 & 字体 ===== */
+ * {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ }
+
+ body {
+ font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+ background: #0d1117;
+ color: #e6edf3;
+ min-height: 100vh;
+ padding: 24px 16px 60px;
+ display: flex;
+ justify-content: center;
+ }
+
+ .container {
+ max-width: 1100px;
+ width: 100%;
+ }
+
+ /* ===== 头部 ===== */
+ .header {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ flex-wrap: wrap;
+ gap: 16px;
+ margin-bottom: 32px;
+ padding-bottom: 16px;
+ border-bottom: 1px solid #21262d;
+ }
+
+ .header-left {
+ display: flex;
+ align-items: center;
+ gap: 14px;
+ }
+
+ .header-left .logo {
+ font-size: 28px;
+ color: #f0f6fc;
+ background: #238636;
+ width: 44px;
+ height: 44px;
+ border-radius: 50%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ }
+
+ .header-left h1 {
+ font-size: 24px;
+ font-weight: 700;
+ letter-spacing: -0.3px;
+ background: linear-gradient(135deg, #f0f6fc 0%, #8b949e 100%);
+ -webkit-background-clip: text;
+ -webkit-text-fill-color: transparent;
+ background-clip: text;
+ }
+
+ .header-left h1 span {
+ font-weight: 300;
+ color: #8b949e;
+ -webkit-text-fill-color: #8b949e;
+ }
+
+ .header-right {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ font-size: 14px;
+ color: #8b949e;
+ }
+
+ .header-right i {
+ color: #f0883e;
+ }
+
+ .header-right .update-time {
+ background: #161b22;
+ padding: 6px 14px;
+ border-radius: 20px;
+ border: 1px solid #21262d;
+ font-size: 13px;
+ }
+
+ /* ===== 标签页导航 ===== */
+ .tabs {
+ display: flex;
+ gap: 6px;
+ margin-bottom: 28px;
+ background: #161b22;
+ padding: 6px;
+ border-radius: 16px;
+ border: 1px solid #21262d;
+ flex-wrap: wrap;
+ }
+
+ .tab-btn {
+ flex: 1;
+ min-width: 100px;
+ padding: 12px 20px;
+ border: none;
+ border-radius: 12px;
+ background: transparent;
+ color: #8b949e;
+ font-size: 15px;
+ font-weight: 600;
+ cursor: pointer;
+ transition: all 0.25s ease;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 8px;
+ font-family: inherit;
+ }
+
+ .tab-btn i {
+ font-size: 16px;
+ }
+
+ .tab-btn:hover {
+ color: #f0f6fc;
+ background: #1c2333;
+ }
+
+ .tab-btn.active {
+ background: #238636;
+ color: #fff;
+ box-shadow: 0 4px 12px rgba(35, 134, 54, 0.35);
+ }
+
+ .tab-btn .badge {
+ background: rgba(255, 255, 255, 0.15);
+ padding: 0 10px;
+ border-radius: 12px;
+ font-size: 12px;
+ font-weight: 500;
+ }
+
+ .tab-btn.active .badge {
+ background: rgba(255, 255, 255, 0.2);
+ }
+
+ /* ===== 排行榜列表 ===== */
+ .rank-list {
+ display: none;
+ animation: fadeUp 0.4s ease;
+ }
+
+ .rank-list.active {
+ display: block;
+ }
+
+ @keyframes fadeUp {
+ 0% {
+ opacity: 0;
+ transform: translateY(16px);
+ }
+ 100% {
+ opacity: 1;
+ transform: translateY(0);
+ }
+ }
+
+ /* ===== 项目卡片 ===== */
+ .rank-item {
+ display: flex;
+ align-items: stretch;
+ background: #161b22;
+ border: 1px solid #21262d;
+ border-radius: 14px;
+ padding: 18px 20px;
+ margin-bottom: 12px;
+ transition: all 0.2s ease;
+ cursor: default;
+ gap: 16px;
+ }
+
+ .rank-item:hover {
+ border-color: #30363d;
+ background: #1c2333;
+ transform: translateY(-2px);
+ box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+ }
+
+ /* 排名数字 */
+ .rank-number {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ min-width: 40px;
+ font-size: 22px;
+ font-weight: 800;
+ color: #8b949e;
+ letter-spacing: -0.5px;
+ font-feature-settings: "tnum";
+ }
+
+ .rank-number.top1 {
+ color: #f0883e;
+ }
+ .rank-number.top2 {
+ color: #c0c0c0;
+ }
+ .rank-number.top3 {
+ color: #cd7f32;
+ }
+
+ /* 项目内容 */
+ .rank-content {
+ flex: 1;
+ min-width: 0;
+ display: flex;
+ flex-direction: column;
+ gap: 6px;
+ }
+
+ .rank-content .project-name {
+ font-size: 18px;
+ font-weight: 600;
+ color: #f0f6fc;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ flex-wrap: wrap;
+ }
+
+ .rank-content .project-name a {
+ color: #58a6ff;
+ text-decoration: none;
+ transition: color 0.2s;
+ }
+
+ .rank-content .project-name a:hover {
+ color: #79c0ff;
+ text-decoration: underline;
+ }
+
+ .rank-content .project-name .repo-icon {
+ color: #8b949e;
+ font-size: 16px;
+ }
+
+ .rank-content .project-desc {
+ font-size: 14px;
+ color: #8b949e;
+ line-height: 1.5;
+ display: -webkit-box;
+ -webkit-line-clamp: 2;
+ -webkit-box-orient: vertical;
+ overflow: hidden;
+ }
+
+ /* 指标行 */
+ .metrics {
+ display: flex;
+ flex-wrap: wrap;
+ align-items: center;
+ gap: 18px 28px;
+ margin-top: 4px;
+ }
+
+ .metric {
+ display: flex;
+ align-items: center;
+ gap: 5px;
+ font-size: 14px;
+ color: #8b949e;
+ }
+
+ .metric .value {
+ font-weight: 600;
+ color: #f0f6fc;
+ }
+
+ .metric .value.green {
+ color: #3fb950;
+ }
+
+ .metric .value.orange {
+ color: #f0883e;
+ }
+
+ .metric .value.purple {
+ color: #bc8cff;
+ }
+
+ .metric .trend-up {
+ color: #3fb950;
+ font-size: 12px;
+ }
+
+ .metric .trend-down {
+ color: #f85149;
+ font-size: 12px;
+ }
+
+ /* 星星徽章 */
+ .stars-badge {
+ display: inline-flex;
+ align-items: center;
+ gap: 4px;
+ background: #21262d;
+ padding: 2px 12px 2px 8px;
+ border-radius: 20px;
+ font-size: 13px;
+ font-weight: 500;
+ color: #f0f6fc;
+ border: 1px solid #30363d;
+ }
+
+ .stars-badge i {
+ color: #f0883e;
+ font-size: 13px;
+ }
+
+ /* ===== 响应式 ===== */
+ @media (max-width: 768px) {
+ .header {
+ flex-direction: column;
+ align-items: flex-start;
+ }
+
+ .header-left h1 {
+ font-size: 20px;
+ }
+
+ .rank-item {
+ flex-direction: column;
+ padding: 16px;
+ gap: 10px;
+ }
+
+ .rank-number {
+ align-self: flex-start;
+ font-size: 18px;
+ min-width: auto;
+ }
+
+ .metrics {
+ gap: 10px 16px;
+ }
+
+ .tab-btn {
+ min-width: 70px;
+ padding: 10px 14px;
+ font-size: 13px;
+ }
+
+ .tab-btn .badge {
+ display: none;
+ }
+
+ .rank-content .project-name {
+ font-size: 16px;
+ }
+ }
+
+ @media (max-width: 480px) {
+ .container {
+ padding: 0 4px;
+ }
+
+ .header-left .logo {
+ width: 36px;
+ height: 36px;
+ font-size: 22px;
+ }
+
+ .rank-item {
+ padding: 14px;
+ }
+
+ .metric {
+ font-size: 12px;
+ }
+ }
+
+ /* ===== 滚动条美化 ===== */
+ ::-webkit-scrollbar {
+ width: 6px;
+ height: 6px;
+ }
+
+ ::-webkit-scrollbar-track {
+ background: #0d1117;
+ }
+
+ ::-webkit-scrollbar-thumb {
+ background: #30363d;
+ border-radius: 8px;
+ }
+
+ ::-webkit-scrollbar-thumb:hover {
+ background: #484f58;
+ }
+
+ /* ===== 页脚 ===== */
+ .footer {
+ margin-top: 40px;
+ text-align: center;
+ font-size: 13px;
+ color: #484f58;
+ border-top: 1px solid #21262d;
+ padding-top: 24px;
+ display: flex;
+ justify-content: center;
+ gap: 24px;
+ flex-wrap: wrap;
+ }
+
+ .footer a {
+ color: #58a6ff;
+ text-decoration: none;
+ }
+
+ .footer a:hover {
+ text-decoration: underline;
+ }
+ </style>
+</head>
+<body>
+
+ <div class="container">
+
+ <!-- ===== 头部 ===== -->
+ <header class="header">
+ <div class="header-left">
+ <div class="logo"><i class="fab fa-github"></i></div>
+ <h1>AI 开源热榜 <span>· 最佳项目</span></h1>
+ </div>
+ <div class="header-right">
+ <i class="fas fa-sync-alt fa-fw"></i>
+ <span>更新于</span>
+ <span class="update-time" id="updateTime">2026-07-18 14:30</span>
+ </div>
+ </header>
+
+ <!-- ===== 标签页 ===== -->
+ <div class="tabs" role="tablist">
+ <button class="tab-btn active" data-tab="daily" role="tab">
+ <i class="fas fa-sun"></i> 日榜
+ <span class="badge">今日</span>
+ </button>
+ <button class="tab-btn" data-tab="monthly" role="tab">
+ <i class="fas fa-calendar-alt"></i> 月榜
+ <span class="badge">本月</span>
+ </button>
+ <button class="tab-btn" data-tab="yearly" role="tab">
+ <i class="fas fa-calendar-check"></i> 年榜
+ <span class="badge">年度</span>
+ </button>
+ </div>
+
+ <!-- ===== 日榜 ===== -->
+ <div id="daily" class="rank-list active" role="tabpanel">
+ <!-- 由 JavaScript 渲染 -->
+ </div>
+
+ <!-- ===== 月榜 ===== -->
+ <div id="monthly" class="rank-list" role="tabpanel">
+ <!-- 由 JavaScript 渲染 -->
+ </div>
+
+ <!-- ===== 年榜 ===== -->
+ <div id="yearly" class="rank-list" role="tabpanel">
+ <!-- 由 JavaScript 渲染 -->
+ </div>
+
+ <!-- ===== 页脚 ===== -->
+ <div class="footer">
+ <span>⭐ 数据基于 GitHub 公开 API 模拟 · 仅展示 AI 相关项目</span>
+ <span>·</span>
+ <a href="#"><i class="fab fa-github"></i> 项目源码</a>
+ <span>·</span>
+ <span>📊 每日自动更新</span>
+ </div>
+
+ </div>
+
+ <script>
+ // ================================================================
+ // 1. 模拟数据集 - 仅包含 AI 相关开源项目
+ // ================================================================
+
+ const PROJECTS = [{
+ id: 1,
+ owner: 'tensorflow',
+ name: 'tensorflow',
+ description: '面向所有人的开源机器学习框架。使用 Python、C++ 和 JavaScript 构建和训练 ML 模型。',
+ url: 'https://github.com/tensorflow/tensorflow',
+ stars: 185000,
+ }, {
+ id: 2,
+ owner: 'pytorch',
+ name: 'pytorch',
+ description: 'Python 中的张量和动态神经网络，具有强大的 GPU 加速。用于深度学习和 AI 研究。',
+ url: 'https://github.com/pytorch/pytorch',
+ stars: 82000,
+ }, {
+ id: 3,
+ owner: 'huggingface',
+ name: 'transformers',
+ description: '最先进的自然语言处理（NLP）模型库，支持 PyTorch、TensorFlow 和 JAX。',
+ url: 'https://github.com/huggingface/transformers',
+ stars: 130000,
+ }, {
+ id: 4,
+ owner: 'langchain-ai',
+ name: 'langchain',
+ description: '用于开发由大型语言模型（LLM）驱动的应用程序的框架。',
+ url: 'https://github.com/langchain-ai/langchain',
+ stars: 90000,
+ }, {
+ id: 5,
+ owner: 'ollama',
+ name: 'ollama',
+ description: '在本地运行大型语言模型的轻量级工具，支持 Llama、Mistral 等模型。',
+ url: 'https://github.com/ollama/ollama',
+ stars: 50000,
+ }, {
+ id: 6,
+ owner: 'ggerganov',
+ name: 'llama.cpp',
+ description: '使用 C++ 实现的 Llama 模型推理，支持 CPU 和 GPU 高效运行。',
+ url: 'https://github.com/ggerganov/llama.cpp',
+ stars: 60000,
+ }, {
+ id: 7,
+ owner: 'AUTOMATIC1111',
+ name: 'stable-diffusion-webui',
+ description: 'Stable Diffusion 的图形化 Web 界面，支持各种图像生成和编辑功能。',
+ url: 'https://github.com/AUTOMATIC1111/stable-diffusion-webui',
+ stars: 140000,
+ }, {
+ id: 8,
+ owner: 'openai',
+ name: 'whisper',
+ description: 'OpenAI 的通用语音识别模型，支持多种语言的音频转文本。',
+ url: 'https://github.com/openai/whisper',
+ stars: 60000,
+ }, {
+ id: 9,
+ owner: 'opencv',
+ name: 'opencv',
+ description: '开源计算机视觉和机器学习软件库，提供数百种算法。',
+ url: 'https://github.com/opencv/opencv',
+ stars: 78000,
+ }, {
+ id: 10,
+ owner: 'scikit-learn',
+ name: 'scikit-learn',
+ description: 'Python 的经典机器学习库，提供简单高效的数据挖掘和数据分析工具。',
+ url: 'https://github.com/scikit-learn/scikit-learn',
+ stars: 58000,
+ }, {
+ id: 11,
+ owner: 'keras-team',
+ name: 'keras',
+ description: '高级神经网络 API，用 Python 编写，可运行在 TensorFlow 之上。',
+ url: 'https://github.com/keras-team/keras',
+ stars: 61000,
+ }, {
+ id: 12,
+ owner: 'jax-ml',
+ name: 'jax',
+ description: '支持自动微分和 GPU/TPU 加速的 Python 数值计算库，用于机器学习研究。',
+ url: 'https://github.com/jax-ml/jax',
+ stars: 30000,
+ }, {
+ id: 13,
+ owner: 'fastai',
+ name: 'fastai',
+ description: '简化了深度学习的训练和部署，提供高层 API 和最佳实践。',
+ url: 'https://github.com/fastai/fastai',
+ stars: 25000,
+ }, {
+ id: 14,
+ owner: 'microsoft',
+ name: 'DeepSpeed',
+ description: '深度学习训练优化库，支持大规模模型训练和推理加速。',
+ url: 'https://github.com/microsoft/DeepSpeed',
+ stars: 35000,
+ }, {
+ id: 15,
+ owner: 'NVIDIA',
+ name: 'Megatron-LM',
+ description: '用于训练大规模语言模型的分布式训练框架。',
+ url: 'https://github.com/NVIDIA/Megatron-LM',
+ stars: 16000,
+ }, {
+ id: 16,
+ owner: 'huggingface',
+ name: 'diffusers',
+ description: '用于图像和音频生成的最先进扩散模型库。',
+ url: 'https://github.com/huggingface/diffusers',
+ stars: 23000,
+ }, {
+ id: 17,
+ owner: 'mlflow',
+ name: 'mlflow',
+ description: '机器学习生命周期管理平台，支持实验跟踪、模型打包和部署。',
+ url: 'https://github.com/mlflow/mlflow',
+ stars: 18000,
+ }, {
+ id: 18,
+ owner: 'ray-project',
+ name: 'ray',
+ description: '用于扩展 AI 和 Python 应用程序的统一框架，支持分布式训练和服务。',
+ url: 'https://github.com/ray-project/ray',
+ stars: 32000,
+ }, {
+ id: 19,
+ owner: 'replicate',
+ name: 'cog',
+ description: '用于将机器学习模型打包到容器中并部署的工具。',
+ url: 'https://github.com/replicate/cog',
+ stars: 7000,
+ }, {
+ id: 20,
+ owner: 'wandb',
+ name: 'wandb',
+ description: '机器学习实验跟踪和可视化工具，支持协作和结果共享。',
+ url: 'https://github.com/wandb/wandb',
+ stars: 7000,
+ }];
+
+ // ================================================================
+ // 2. 生成排行数据（日 / 月 / 年）
+ // ================================================================
+
+ function buildRankData() {
+ const base = PROJECTS.map(p => ({ ...p }));
+
+ // 为每个项目生成三个维度的增长数据
+ const dailyList = base.map(p => {
+ const d = Math.floor(Math.random() * 4900) + 100;
+ const w = Math.floor(d * (3 + Math.random() * 5));
+ const m = Math.floor(d * (10 + Math.random() * 18));
+ return { ...p, dailyGrowth: d, weeklyGrowth: w, monthlyGrowth: m };
+ });
+
+ const monthlyList = dailyList.map(p => {
+ const m = Math.floor(Math.random() * 12000) + 800;
+ return {
+ ...p,
+ dailyGrowth: Math.floor(Math.random() * 3000) + 50,
+ weeklyGrowth: Math.floor(Math.random() * 8000) + 200,
+ monthlyGrowth: m,
+ };
+ });
+
+ const yearlyList = dailyList.map(p => {
+ const y = Math.floor(Math.random() * 25000) + 1500;
+ return {
+ ...p,
+ dailyGrowth: Math.floor(Math.random() * 2000) + 30,
+ weeklyGrowth: Math.floor(Math.random() * 5000) + 100,
+ monthlyGrowth: Math.floor(Math.random() * 10000) + 300,
+ yearlyGrowth: y,
+ };
+ });
+
+ const dailyRank = [...dailyList].sort((a, b) => b.dailyGrowth - a.dailyGrowth).slice(0, 10);
+ const monthlyRank = [...monthlyList].sort((a, b) => b.monthlyGrowth - a.monthlyGrowth).slice(0, 10);
+ const yearlyRank = [...yearlyList].map(p => {
+ const y = Math.floor(p.monthlyGrowth * (3 + Math.random() * 4));
+ return { ...p, yearlyGrowth: y };
+ }).sort((a, b) => b.yearlyGrowth - a.yearlyGrowth).slice(0, 10);
+
+ const formatStars = (num) => {
+ if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+ if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+ return num.toString();
+ };
+ const formatGrowth = (num) => {
+ if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+ return num.toString();
+ };
+
+ const processItem = (item, growthKey, extraFields = {}) => {
+ const growth = item[growthKey] || 0;
+ return {
+ ...item,
+ displayStars: formatStars(item.stars),
+ displayGrowth: formatGrowth(growth),
+ growthValue: growth,
+ ...extraFields,
+ };
+ };
+
+ return {
+ daily: dailyRank.map(item => processItem(item, 'dailyGrowth', { rankType: 'daily' })),
+ monthly: monthlyRank.map(item => processItem(item, 'monthlyGrowth', { rankType: 'monthly' })),
+ yearly: yearlyRank.map(item => processItem(item, 'yearlyGrowth', { rankType: 'yearly' })),
+ };
+ }
+
+ // ================================================================
+ // 3. 渲染函数
+ // ================================================================
+
+ function renderRankList(containerId, data, rankType) {
+ const container = document.getElementById(containerId);
+ if (!container) return;
+ if (!data || data.length === 0) {
+ container.innerHTML = `<div style="text-align:center;padding:40px;color:#8b949e;">暂无数据</div>`;
+ return;
+ }
+
+ const rankEmojis = ['🥇', '🥈', '🥉'];
+ let html = '';
+ data.forEach((item, index) => {
+ const rank = index + 1;
+ const rankClass = rank <= 3 ? `top${rank}` : '';
+ const emoji = rank <= 3 ? rankEmojis[rank - 1] : `#${rank}`;
+
+ let metricsHtml = `
+ <div class="metric">
+ <i class="fas fa-star" style="color:#f0883e;"></i>
+ <span class="value">${item.displayStars}</span>
+ <span style="color:#8b949e;font-size:12px;">总星标</span>
+ </div>
+ <div class="metric">
+ <i class="fas fa-arrow-up trend-up"></i>
+ <span class="value green">+${item.displayGrowth}</span>
+ <span style="color:#8b949e;font-size:12px;">${rankType === 'daily' ? '今日' : rankType === 'monthly' ? '本月' : '年度'}</span>
+ </div>
+ `;
+
+ if (rankType === 'daily') {
+ const weekVal = item.weeklyGrowth || 0;
+ const weekDisplay = weekVal >= 1000 ? (weekVal / 1000).toFixed(1) + 'k' : weekVal.toString();
+ metricsHtml += `
+ <div class="metric">
+ <i class="fas fa-arrow-up trend-up"></i>
+ <span class="value green">+${weekDisplay}</span>
+ <span style="color:#8b949e;font-size:12px;">上周</span>
+ </div>
+ <div class="metric">
+ <i class="fas fa-arrow-up trend-up"></i>
+ <span class="value green">+${item.displayGrowth}</span>
+ <span style="color:#8b949e;font-size:12px;">上月</span>
+ </div>
+ `;
+ } else if (rankType === 'monthly') {
+ const weekVal = item.weeklyGrowth || 0;
+ const weekDisplay = weekVal >= 1000 ? (weekVal / 1000).toFixed(1) + 'k' : weekVal.toString();
+ metricsHtml += `
+ <div class="metric">
+ <i class="fas fa-arrow-up trend-up"></i>
+ <span class="value green">+${weekDisplay}</span>
+ <span style="color:#8b949e;font-size:12px;">上周</span>
+ </div>
+ <div class="metric">
+ <i class="fas fa-calendar-alt" style="color:#bc8cff;"></i>
+ <span class="value purple">+${item.displayGrowth}</span>
+ <span style="color:#8b949e;font-size:12px;">本月</span>
+ </div>
+ `;
+ } else if (rankType === 'yearly') {
+ const monthVal = item.monthlyGrowth || 0;
+ const monthDisplay = monthVal >= 1000 ? (monthVal / 1000).toFixed(1) + 'k' : monthVal.toString();
+ metricsHtml += `
+ <div class="metric">
+ <i class="fas fa-arrow-up trend-up"></i>
+ <span class="value green">+${monthDisplay}</span>
+ <span style="color:#8b949e;font-size:12px;">上月</span>
+ </div>
+ <div class="metric">
+ <i class="fas fa-calendar-check" style="color:#bc8cff;"></i>
+ <span class="value purple">+${item.displayGrowth}</span>
+ <span style="color:#8b949e;font-size:12px;">年度</span>
+ </div>
+ `;
+ }
+
+ html += `
+ <div class="rank-item">
+ <div class="rank-number ${rankClass}">${emoji}</div>
+ <div class="rank-content">
+ <div class="project-name">
+ <i class="fab fa-github repo-icon"></i>
+ <a href="${item.url}" target="_blank" rel="noopener noreferrer">
+ ${item.owner}/${item.name}
+ </a>
+ <span class="stars-badge">
+ <i class="fas fa-star"></i> ${item.displayStars}
+ </span>
+ </div>
+ <div class="project-desc">${item.description}</div>
+ <div class="metrics">
+ ${metricsHtml}
+ </div>
+ </div>
+ </div>
+ `;
+ });
+
+ container.innerHTML = html;
+ }
+
+ // ================================================================
+ // 4. 初始化 & 标签切换
+ // ================================================================
+
+ const rankData = buildRankData();
+
+ renderRankList('daily', rankData.daily, 'daily');
+ renderRankList('monthly', rankData.monthly, 'monthly');
+ renderRankList('yearly', rankData.yearly, 'yearly');
+
+ const tabs = document.querySelectorAll('.tab-btn');
+ const panels = {
+ daily: document.getElementById('daily'),
+ monthly: document.getElementById('monthly'),
+ yearly: document.getElementById('yearly'),
+ };
+
+ tabs.forEach(btn => {
+ btn.addEventListener('click', function() {
+ tabs.forEach(b => b.classList.remove('active'));
+ this.classList.add('active');
+ Object.values(panels).forEach(p => p.classList.remove('active'));
+ const tabId = this.dataset.tab;
+ if (panels[tabId]) panels[tabId].classList.add('active');
+ });
+ });
+
+ // 更新时间
+ const now = new Date();
+ const timeStr =
+ `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+ document.getElementById('updateTime').textContent = timeStr;
+
+ console.log('✅ AI 开源项目排行榜已加载');
+ </script>
+
+</body>
+</html>
