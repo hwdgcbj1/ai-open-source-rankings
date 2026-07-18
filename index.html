@@ -493,11 +493,13 @@ function searchGitHubProjects(query){
  // Show loading state
  renderAll();
  
- // For non-English queries, search broader without topic filter
+ // Remove all filters — search the entire GitHub network
+ // GitHub search by default covers name, description, README
+ // For non-English queries, use in: qualifier to match description/readme
  const isEnglish=/^[a-zA-Z0-9\s_.-]+$/.test(query);
- // Search in name and readme
- const searchQ=isEnglish?query+'+topic:ai+stars:>500':query+'+ai+stars:>500';
- const url='https://api.github.com/search/repositories?q='+encodeURIComponent(searchQ)+'&sort=stars&order=desc&per_page=20';
+ // Search everything on GitHub, no topic/star limits
+ const searchQ=isEnglish?query:query+' in:name,description,readme';
+ const url='https://api.github.com/search/repositories?q='+encodeURIComponent(searchQ)+'&sort=stars&order=desc&per_page=30';
  const headers={'Accept':'application/vnd.github.v3+json'};
  if(window.__GH_TOKEN){headers['Authorization']='Bearer '+window.__GH_TOKEN}
  
@@ -691,10 +693,10 @@ function renderRankList(tabId,pageData,fullData,hotFlags,changes){
  if(pageData.length===0){
   const q=state.searchQuery||state.category||state.langFilter[0];
   let extra='';
-  if(q&&!state.githubResults&&!state.isSearching){
-   extra='<p style="margin-top:8px;font-size:13px;color:var(--text-secondary)">⏳ 正在搜索 GitHub 上的热门 AI 项目…</p>';
+  if(state.isSearching){
+   extra='<p style="margin-top:8px;font-size:13px;color:var(--text-secondary)">⏳ 正在搜索 GitHub 全网项目…</p>';
   }else if(q&&state.githubResults==='error'){
-   extra='<p style="margin-top:8px;font-size:13px;color:var(--text-secondary)">⚠ GitHub API 搜索受限，可稍后重试或直接前往 GitHub 搜索</p>';
+   extra='<p style="margin-top:8px;font-size:13px;color:var(--text-secondary)">⚠ GitHub API 搜索受限，可稍后重试或直接前往 <a href="https://github.com/search?q='+encodeURIComponent(state.searchQuery)+'" target="_blank" style="color:var(--accent-blue)">GitHub 搜索</a></p>';
   }
   container.innerHTML=`<div class="empty-state"><i class="fas fa-inbox"></i><p>${q?'没有匹配的项目':(state.historyOffset?'该日期暂无数据':'暂无数据')}</p>${extra}${state.langFilter.length||state.starFilter||state.growthFilter||state.licenseFilter?`<button onclick="resetFilters()"><i class="fas fa-undo"></i> 清空筛选</button>`:''}</div>`;
   return;
