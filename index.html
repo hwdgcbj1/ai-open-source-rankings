@@ -415,26 +415,26 @@ const TAG_MAP={tensorflow:{tech:['Python','C++','CUDA'],scenario:['深度学习'
 const CATEGORIES={tensorflow:'训练框架',pytorch:'训练框架',transformers:'NLP',langchain:'LLM 框架',ollama:'推理加速','llama.cpp':'推理加速','stable-diffusion-webui':'图像生成',whisper:'语音',opencv:'计算机视觉','scikit-learn':'机器学习',keras:'训练框架',jax:'训练框架',fastai:'训练框架',DeepSpeed:'训练框架','Megatron-LM':'训练框架',diffusers:'图像生成',mlflow:'机器学习',ray:'机器学习',cog:'工具',wandb:'工具'}
 
 const PROJECTS=[
- {id:1,owner:'tensorflow',name:'tensorflow',description:'面向所有人的开源机器学习框架。使用 Python、C++ 和 JavaScript 构建和训练 ML 模型，支持从研究到生产全流程。',url:'https://github.com/tensorflow/tensorflow',stars:185000},
- {id:2,owner:'pytorch',name:'pytorch',description:'Python 中的张量和动态神经网络，具有强大的 GPU 加速。用于深度学习和 AI 研究，以动态计算图和易用性著称。',url:'https://github.com/pytorch/pytorch',stars:82000},
- {id:3,owner:'huggingface',name:'transformers',description:'最先进的 NLP 模型库，支持 PyTorch、TensorFlow 和 JAX。提供数千个预训练模型，涵盖文本、图像、音频等多模态。',url:'https://github.com/huggingface/transformers',stars:130000},
- {id:4,owner:'langchain-ai',name:'langchain',description:'用于开发 LLM 应用的框架。提供链式调用、Agent、RAG 等模块化组件。',url:'https://github.com/langchain-ai/langchain',stars:90000},
- {id:5,owner:'ollama',name:'ollama',description:'在本地运行 LLM 的轻量级工具，支持 Llama、Mistral 等主流模型。一键下载、零配置运行。',url:'https://github.com/ollama/ollama',stars:50000},
- {id:6,owner:'ggerganov',name:'llama.cpp',description:'使用 C++ 实现的 Llama 模型推理，支持 CPU 和 GPU 高效运行。无外部依赖，可在消费级硬件上运行大模型。',url:'https://github.com/ggerganov/llama.cpp',stars:60000},
- {id:7,owner:'AUTOMATIC1111',name:'stable-diffusion-webui',description:'Stable Diffusion 图形化 Web 界面，集成 ControlNet、LoRA、超分辨率等扩展。',url:'https://github.com/AUTOMATIC1111/stable-diffusion-webui',stars:140000},
- {id:8,owner:'openai',name:'whisper',description:'OpenAI 通用语音识别模型，支持 99+ 种语言的音频转文本。',url:'https://github.com/openai/whisper',stars:60000},
- {id:9,owner:'opencv',name:'opencv',description:'开源计算机视觉和机器学习软件库，提供数百种算法。',url:'https://github.com/opencv/opencv',stars:78000},
- {id:10,owner:'scikit-learn',name:'scikit-learn',description:'Python 经典机器学习库，内置分类、回归、聚类、降维等算法。',url:'https://github.com/scikit-learn/scikit-learn',stars:58000},
- {id:11,owner:'keras-team',name:'keras',description:'高级神经网络 API，以极简 API 设计闻名，适合快速原型开发和教学。',url:'https://github.com/keras-team/keras',stars:61000},
- {id:12,owner:'jax-ml',name:'jax',description:'支持自动微分和 GPU/TPU 加速的 Python 数值计算库。函数式编程，JIT 编译加速。',url:'https://github.com/jax-ml/jax',stars:30000},
- {id:13,owner:'fastai',name:'fastai',description:'简化深度学习训练和部署的库，搭配课程和教材，入门深度学习的流行选择。',url:'https://github.com/fastai/fastai',stars:25000},
- {id:14,owner:'microsoft',name:'DeepSpeed',description:'深度学习训练优化库，ZeRO 优化器可训练千亿参数模型。',url:'https://github.com/microsoft/DeepSpeed',stars:35000},
- {id:15,owner:'NVIDIA',name:'Megatron-LM',description:'用于训练大规模语言模型的分布式训练框架。模型并行、数据并行、流水线并行。',url:'https://github.com/NVIDIA/Megatron-LM',stars:16000},
- {id:16,owner:'huggingface',name:'diffusers',description:'最先进的扩散模型库，支持文生图、图生图、图像修复、超分辨率等。',url:'https://github.com/huggingface/diffusers',stars:23000},
- {id:17,owner:'mlflow',name:'mlflow',description:'ML 生命周期管理平台，实验跟踪、模型打包和部署。',url:'https://github.com/mlflow/mlflow',stars:18000},
- {id:18,owner:'ray-project',name:'ray',description:'扩展 AI 和 Python 应用的统一框架，分布式训练、推理和服务。',url:'https://github.com/ray-project/ray',stars:32000},
- {id:19,owner:'replicate',name:'cog',description:'将 ML 模型打包到容器中并部署的工具。一键部署到云平台。',url:'https://github.com/replicate/cog',stars:7000},
- {id:20,owner:'wandb',name:'wandb',description:'ML 实验跟踪和可视化工具，自动记录超参数、指标、输出。',url:'https://github.com/wandb/wandb',stars:7000}
+ {id:1,owner:'tensorflow',name:'tensorflow',description:'Google 开源的端到端机器学习框架，支持从研究到生产全流程。提供 Keras 高级 API、Eager Execution 动态图、TFX 生产管道、TF Lite 移动端部署、TensorBoard 可视化，覆盖深度学习、强化学习、MLOps 等场景，支持 Python/C++/JavaScript，生态最成熟。',url:'https://github.com/tensorflow/tensorflow',stars:185000},
+ {id:2,owner:'pytorch',name:'pytorch',description:'Meta 开源的深度学习框架，以动态计算图和 Python 原生风格著称。提供张量计算与 GPU 加速、自动微分、TorchScript 序列化、TorchDynamo 编译器、Distributed 分布式训练、TorchServe 部署。学术界首选框架，兼顾灵活性与高性能。',url:'https://github.com/pytorch/pytorch',stars:82000},
+ {id:3,owner:'huggingface',name:'transformers',description:'业界最流行的预训练模型库，支持文本（BERT/GPT/LLaMA）、图像（ViT/Swin）、音频（Whisper/HuBERT）、多模态（LLaVA/CLIP）全覆盖。兼容 PyTorch/TensorFlow/JAX 三大框架，提供统一 from_pretrained 接口和 Trainer 训练工具，数万模型开箱即用。',url:'https://github.com/huggingface/transformers',stars:130000},
+ {id:4,owner:'langchain-ai',name:'langchain',description:'领先的 LLM 应用开发框架，构建 AI Agent、RAG 检索增强生成、链式调用、工具编排。集成多种大模型 API（OpenAI/Claude/本地模型）、向量数据库（Chroma/FAISS）、文档加载器。提供 LangGraph 构建 Agent、LangServe 部署、LangSmith 调试追踪，LLM 工程化标配。',url:'https://github.com/langchain-ai/langchain',stars:90000},
+ {id:5,owner:'ollama',name:'ollama',description:'本地大模型运行工具，一键下载运行 DeepSeek/Qwen/GLM/Gemma/Llama 等数十种主流模型。基于 llama.cpp 后端，无 GPU 也可高效 CPU 推理。提供简洁命令行和 REST API，支持 macOS/Linux/Windows，零配置上手极快，本地 AI 部署首选。',url:'https://github.com/ollama/ollama',stars:50000},
+ {id:6,owner:'ggerganov',name:'llama.cpp',description:'纯 C/C++ 高效 LLM 推理引擎，支持 Llama/Mistral/Falcon/Gemma 等主流模型。4-bit/8-bit 量化后可在消费级 CPU 上流畅运行大模型。支持 Metal（macOS）、CUDA、Vulkan 多后端加速，无外部依赖、跨平台、内存效率极高，本地推理底层基石。',url:'https://github.com/ggerganov/llama.cpp',stars:60000},
+ {id:7,owner:'AUTOMATIC1111',name:'stable-diffusion-webui',description:'Stable Diffusion 生态最流行的图形化操作界面。提供文生图/图生图/图像修复/超分辨率等核心功能，集成 ControlNet（姿态/深度/边缘控制）、LoRA 微调、Textual Inversion 嵌入等上百种扩展。Gradio 构建，一键启动，AI 绘画必备。',url:'https://github.com/AUTOMATIC1111/stable-diffusion-webui',stars:140000},
+ {id:8,owner:'openai',name:'whisper',description:'OpenAI 开源的通用语音识别模型，支持 99+ 种语言的音频转文本。Encoder-Decoder Transformer 架构，在 68 万小时多语种弱监督数据上训练。支持语音翻译（直转英文）、多语言转录、时间戳对齐、VAD 检测，噪声/口音/术语鲁棒性强。',url:'https://github.com/openai/whisper',stars:60000},
+ {id:9,owner:'opencv',name:'opencv',description:'业界标准的开源计算机视觉库，提供 2500+ 优化算法。覆盖图像处理、特征检测与匹配、目标检测与跟踪、人脸识别、相机标定、三维重建、深度学习推理等全场景。支持 C++/Python/Java/JavaScript，全平台运行，工业视觉事实标准。',url:'https://github.com/opencv/opencv',stars:78000},
+ {id:10,owner:'scikit-learn',name:'scikit-learn',description:'Python 最经典的机器学习库，提供统一 fit/predict API。涵盖分类（SVM/随机森林/KNN）、回归、聚类（K-Means/DBSCAN）、降维（PCA/t-SNE）、模型选择（交叉验证/网格搜索）、数据预处理等完整算法集。API 优雅、文档详尽，ML 入门和基准测试首选。',url:'https://github.com/scikit-learn/scikit-learn',stars:58000},
+ {id:11,owner:'keras-team',name:'keras',description:'Google 维护的高级深度学习 API，主打极简设计。提供 Sequential、Functional API、Subclassing 三种模型构建方式，3-5 行即可搭建神经网络。内置大量预训练模型（EfficientNet/ResNet/MobileNet），支持 TensorFlow/JAX/PyTorch 多后端切换，新手友好。',url:'https://github.com/keras-team/keras',stars:61000},
+ {id:12,owner:'jax-ml',name:'jax',description:'Google 开源的自动微分与加速计算库，提供 NumPy 兼容的函数式 API。通过 XLA 实现 JIT 编译、grad 自动微分、vmap 向量化映射、pmap 并行计算。天然适配 GPU/TPU，函数式纯计算范式适合科学计算和深度学习研究，Flax/Haiku 等框架基于 JAX 构建。',url:'https://github.com/jax-ml/jax',stars:30000},
+ {id:13,owner:'fastai',name:'fastai',description:'建立在 PyTorch 之上的深度学习高层封装库，极简 API 完成图像分类、文本分类、表格数据、协同过滤等任务。配套 free 免费课程是全球最受欢迎的深度学习入门教程。内置数据加载增强、学习率自动搜索、迁移学习等，教学实践兼顾。',url:'https://github.com/fastai/fastai',stars:25000},
+ {id:14,owner:'microsoft',name:'DeepSpeed',description:'微软开源的深度学习训练优化库，核心 ZeRO（零冗余优化器）系列技术让单 GPU 训练超大模型。提供 ZeRO-Offload（卸载至 CPU/NVMe）、张量并行、流水线并行、混合精度训练、MoE 支持等。训练千亿参数级模型的必备工具，ChatGPT 类模型的幕后功臣。',url:'https://github.com/microsoft/DeepSpeed',stars:35000},
+ {id:15,owner:'NVIDIA',name:'Megatron-LM',description:'NVIDIA 开源的超大规模 Transformer 分布式训练框架，专为千亿至万亿参数语言模型设计。核心实现模型并行（Tensor Parallelism）、流水线并行（Pipeline Parallelism）、数据并行三种策略组合（3D Parallelism），推动大模型缩放训练的边界。',url:'https://github.com/NVIDIA/Megatron-LM',stars:16000},
+ {id:16,owner:'huggingface',name:'diffusers',description:'Hugging Face 出品的扩散模型库，集成最先进的文生图/图生图/视频生成/音频生成模型。支持 Stable Diffusion 全系列（SD1.5/SDXL/SD3/SD Turbo）、Flux 等。提供训练/推理/微调管线，支持 LoRA、DreamBooth、ControlNet、调度器自定义，扩散模型事实标准库。',url:'https://github.com/huggingface/diffusers',stars:23000},
+ {id:17,owner:'mlflow',name:'mlflow',description:'业界最流行的开源 ML 生命周期管理平台，覆盖实验跟踪（Tracking）、模型打包（Projects）、模型注册（Model Registry）、部署服务（Serving）全流程。自动记录超参数/指标/代码版本，最新版扩展 LLM 评估、Agent 追踪、GenAI 应用监控，适配任何 ML 框架。',url:'https://github.com/mlflow/mlflow',stars:18000},
+ {id:18,owner:'ray-project',name:'ray',description:'分布式 AI 计算引擎，将单机 Python 代码无缝扩展到集群。生态包含 Ray Train（分布式训练）、Ray Serve（模型部署）、Ray Data（数据加载）、Ray Tune（超参调优）、RLlib（强化学习）、Ray AIR。Uber/OpenAI/Ant Group 采用，生产级分布式 AI 基础设施。',url:'https://github.com/ray-project/ray',stars:32000},
+ {id:19,owner:'replicate',name:'cog',description:'Replicate 开源的 ML 模型容器化打包工具，自动将 Python ML 模型打包为标准 Docker 容器并生成 RESTful API。支持 GPU 加速、批处理、自定义 worker 并发。一行命令即可部署任意模型到云平台，简化模型工程化到上线的最后一公里。',url:'https://github.com/replicate/cog',stars:7000},
+ {id:20,owner:'wandb',name:'wandb',description:'AI 开发者最广泛使用的实验跟踪与协作平台。自动记录训练超参数/指标曲线/模型权重/GPU利用率/代码版本和环境。提供交互式看板、超参数对比自动分组、模型版本管理、数据集版本控制、报告共享。集成 PyTorch/TensorFlow/Keras/HuggingFace 等框架。',url:'https://github.com/wandb/wandb',stars:7000}
 ].map(p=>({...p,category:CATEGORIES[p.name]||'其他',language:LANG_MAP[p.name]||'Python',license:LICENSE_MAP[p.name]||'MIT',tags:TAG_MAP[p.name]||{tech:[],scenario:[],feature:[]}}))
 
 // ===== 2. 辅助 =====
@@ -508,11 +508,15 @@ function searchGitHubProjects(query){
   .then(json=>{
    const items=(json.items||[]).map((item,i)=>{
     const lang=item.language||'Unknown';
+    // Generate rich description from GitHub official metadata
+    const ghDesc=item.description||'暂无描述';
+    const topicStr=item.topics&&item.topics.length?item.topics.slice(0,5).join('、'):'';
+    const richDesc=topicStr?`${ghDesc} 标签：${topicStr}`:ghDesc;
     return{
      id:'gh_'+item.id,
      owner:item.owner.login,
      name:item.name,
-     description:item.description||'暂无描述',
+     description:richDesc,
      url:item.html_url,
      stars:item.stargazers_count,
      language:lang,
