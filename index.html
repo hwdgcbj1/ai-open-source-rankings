@@ -495,10 +495,10 @@ function searchGitHubProjects(query){
  
  // Remove all filters — search the entire GitHub network
  // GitHub search by default covers name, description, README
- // For non-English queries, use in: qualifier to match description/readme
+ // For non-English queries, only search name+description (avoid README noise)
  const isEnglish=/^[a-zA-Z0-9\s_.-]+$/.test(query);
  // Search everything on GitHub, no topic/star limits
- const searchQ=isEnglish?query:query+' in:name,description,readme';
+ const searchQ=isEnglish?query:query+' in:name,description';
  const url='https://api.github.com/search/repositories?q='+encodeURIComponent(searchQ)+'&sort=stars&order=desc&per_page=30';
  const headers={'Accept':'application/vnd.github.v3+json'};
  if(window.__GH_TOKEN){headers['Authorization']='Bearer '+window.__GH_TOKEN}
