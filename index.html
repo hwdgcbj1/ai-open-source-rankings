@@ -52,7 +52,7 @@
  .minimal-toggle.active{background:var(--tab-active);color:#fff;border-color:var(--tab-active)}
 
  /* ===== 历史日期栏 ===== */
- .history-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+ .history-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;position:relative;z-index:280}
  .history-bar .hist-quick{display:flex;gap:4px}
  .history-bar .hist-quick button{padding:6px 12px;background:var(--search-bg);border:1px solid var(--border);border-radius:8px;color:var(--text-tertiary);font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
  .history-bar .hist-quick button:hover{border-color:var(--border-hover);color:var(--text-secondary)}
@@ -68,7 +68,7 @@
 
  /* ===== 筛选右侧抽屉 ===== */
  .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:250;opacity:0;pointer-events:none;transition:opacity .35s}
- .drawer-overlay.show{opacity:1;pointer-events:auto}
+ .drawer-overlay.show{opacity:1}
  .filter-drawer{position:fixed;top:0;right:-340px;width:320px;height:100vh;background:var(--drawer-bg);border-left:1px solid var(--border);z-index:260;transition:right .35s ease;display:flex;flex-direction:column;box-shadow:-4px 0 24px var(--shadow)}
  .filter-drawer.open{right:0}
  .filter-drawer .dr-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
@@ -105,11 +105,12 @@
  .rank-badge.top3{background:linear-gradient(135deg,#d4a86a,#cd7f32);color:#fff}
  .rank-badge.other{background:var(--tab-bg);color:var(--text-tertiary);border:1px solid var(--border);border-radius:50%;font-size:16px}
  .rank-badge .trophy{position:absolute;top:-7px;right:-6px;font-size:13px}
- /* 对比复选框 */
- .rank-badge .compare-cb-wrap{position:absolute;bottom:-4px;right:-4px;opacity:0;transition:opacity .2s}
- .rank-item:hover .compare-cb-wrap{opacity:1}
- .compare-cb-wrap input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--accent-blue)}
- .rank-item.compare-selected .compare-cb-wrap{opacity:1}
+ /* 对比复选框 - 始终可见 */
+ .rank-badge .compare-cb-wrap{position:absolute;bottom:-6px;right:-6px;z-index:10}
+ .rank-item.compare-selected .compare-cb-wrap .compare-cb{outline:2px solid var(--accent-blue);outline-offset:2px;border-radius:3px}
+ .compare-cb-wrap input[type=checkbox]{width:20px;height:20px;cursor:pointer;accent-color:var(--accent-blue);background:var(--checkbox-bg);opacity:.6;transition:opacity .2s}
+ .compare-cb-wrap input[type=checkbox]:hover{opacity:1}
+ .compare-cb-wrap input[type=checkbox]:checked{opacity:1}
 
  /* 排名变化指示器 */
  .rank-change{font-size:11px;font-weight:600;margin-top:2px;text-align:center}
@@ -169,7 +170,8 @@
  .project-desc .more-btn:hover{color:var(--accent-blue-hover)}
 
  .minimal-mode .stars-main{font-size:20px}
- .minimal-mode .growth-row,.minimal-mode .project-desc,.minimal-mode .mini-bar-wrap,.minimal-mode .tag-row,.minimal-mode .progress-note,.minimal-mode .spark-wrap,.minimal-mode .badge-hot,.minimal-mode .rank-change{display:none}
+
+.minimal-mode .growth-row,.minimal-mode .project-desc,.minimal-mode .mini-bar-wrap,.minimal-mode .tag-row,.minimal-mode .progress-note,.minimal-mode .spark-wrap,.minimal-mode .badge-hot,.minimal-mode .rank-change{display:none}
  .minimal-mode .rank-item{padding:10px 14px}
  .minimal-mode .rank-content{gap:2px}
 
@@ -250,10 +252,10 @@
  .back-top.show{opacity:1;transform:translateY(0);pointer-events:auto}
  .back-top:hover{transform:translateY(-3px)}
 
- .fav-btn{position:fixed;bottom:104px;right:24px;z-index:100;width:42px;height:42px;border-radius:50%;background:var(--bg-card);color:var(--accent-orange);border:1px solid var(--border);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px var(--shadow);transition:all .2s}
+ .fav-btn{position:fixed;bottom:104px;right:24px;z-index:270;width:42px;height:42px;border-radius:50%;background:var(--bg-card);color:var(--accent-orange);border:1px solid var(--border);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px var(--shadow);transition:all .2s}
  .fav-btn:hover{background:var(--bg-card-hover);border-color:var(--border-hover)}
  .fav-btn .count{position:absolute;top:-4px;right:-4px;font-size:10px;background:var(--accent-orange);color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-weight:700}
- .fav-sidebar{position:fixed;top:0;right:-320px;width:300px;height:100vh;background:var(--bg-card);border-left:1px solid var(--border);z-index:200;transition:right .35s ease;overflow-y:auto;padding:20px 16px}
+ .back-top{z-index:270}
  .fav-sidebar.open{right:0}
  .fav-sidebar .fav-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;font-size:16px;font-weight:600}
  .fav-sidebar .fav-title button{background:none;border:none;color:var(--text-tertiary);cursor:pointer;font-size:18px;padding:4px}
@@ -263,8 +265,9 @@
  .fav-sidebar .fav-item .remove-fav{color:var(--text-tertiary);cursor:pointer;font-size:12px;padding:2px 4px}
  .fav-sidebar .fav-item .remove-fav:hover{color:#f85149}
  .fav-sidebar .empty-fav{text-align:center;padding:40px 0;color:var(--text-tertiary);font-size:13px}
+ .fav-sidebar{position:fixed;top:0;right:-320px;width:300px;height:100vh;background:var(--bg-card);border-left:1px solid var(--border);z-index:210;transition:right .35s ease;overflow-y:auto;padding:20px 16px}
  .fav-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;opacity:0;pointer-events:none;transition:opacity .35s}
- .fav-overlay.show{opacity:1;pointer-events:auto}
+ .fav-overlay.show{opacity:1}
 
  .footer{margin-top:40px;text-align:center;font-size:12px;color:var(--text-muted);border-top:1px solid var(--border);padding-top:20px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
  .footer a{color:var(--accent-blue);text-decoration:none}
@@ -1025,9 +1028,11 @@ function initToolbar(){
  ss.addEventListener('change',function(){state.sortBy=this.value;state.page=1;ss.classList.toggle('changed',this.value!=='tab');renderAll()});
  mt.addEventListener('click',function(){state.minimal=!state.minimal;this.classList.toggle('active');this.querySelector('span').textContent=state.minimal?'完整':'极简';document.querySelector('.container').classList.toggle('minimal-mode',state.minimal)});
  // Filter button
+ function closeFilterDrawer(){document.getElementById('filterDrawer').classList.remove('open');document.getElementById('drawerOverlay').classList.remove('show')}
  document.getElementById('filterToggle').addEventListener('click',function(){document.getElementById('filterDrawer').classList.toggle('open');document.getElementById('drawerOverlay').classList.toggle('show')});
- document.getElementById('drClose').addEventListener('click',()=>{document.getElementById('filterDrawer').classList.remove('open');document.getElementById('drawerOverlay').classList.remove('show')});
- document.getElementById('drawerOverlay').addEventListener('click',()=>{document.getElementById('filterDrawer').classList.remove('open');document.getElementById('drawerOverlay').classList.remove('show')});
+ document.getElementById('drClose').addEventListener('click',closeFilterDrawer);
+ // Click outside the drawer closes it (no overlay blocking needed)
+ document.addEventListener('click',function(e){const dr=document.getElementById('filterDrawer');if(!dr.classList.contains('open'))return;if(!dr.contains(e.target)&&e.target.id!=='filterToggle'&&!document.getElementById('filterToggle').contains(e.target)){closeFilterDrawer()}});
 }
 
 // ===== 16. 筛选抽屉 =====
@@ -1214,9 +1219,11 @@ function renderFavSidebar(){
  el.querySelectorAll('.remove-fav').forEach(btn=>{btn.addEventListener('click',e=>{e.stopPropagation();toggleFav(+btn.dataset.id)})});
 }
 function initFav(){
+ function closeFavSidebar(){document.getElementById('favSidebar').classList.remove('open');document.getElementById('favOverlay').classList.remove('show')}
  document.getElementById('favBtn').addEventListener('click',()=>{document.getElementById('favSidebar').classList.add('open');document.getElementById('favOverlay').classList.add('show')});
- document.getElementById('closeFav').addEventListener('click',()=>{document.getElementById('favSidebar').classList.remove('open');document.getElementById('favOverlay').classList.remove('show')});
- document.getElementById('favOverlay').addEventListener('click',()=>{document.getElementById('favSidebar').classList.remove('open');document.getElementById('favOverlay').classList.remove('show')});
+ document.getElementById('closeFav').addEventListener('click',closeFavSidebar);
+ // Click outside fav sidebar closes it
+ document.addEventListener('click',function(e){const fs=document.getElementById('favSidebar');if(!fs.classList.contains('open'))return;if(!fs.contains(e.target)&&e.target.id!=='favBtn'&&!document.getElementById('favBtn').contains(e.target)){closeFavSidebar()}});
 }
 
 // ===== 20. 对比栏 =====
